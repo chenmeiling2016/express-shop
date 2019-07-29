@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/public.css">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            text-decoration: none!important;
+        }
+        body {
+            background-color: #bcdecf;
+        }
+        main div.content{
+            margin: 30px 0 30px 0;
+        }
+        div.box {
+            width: 800px;
+            margin: 50px auto 0;
+        }
+
+        div.box table {
+            border-collapse: collapse;
+            width: inherit;
+            text-align: center;
+            background-color: #f6f6f6;
+        }
+
+        div.box table td, div.box th {
+            border: 1px solid #999;
+        }
+
+        div.box th {
+            height: 40px;
+        }
+
+        div.box table tbody img {
+            height: 50px;
+        }
+
+        div.box table tbody tr span {
+            cursor: default;
+        }
+        div.box table tbody tr td:nth-child(2) img {
+            vertical-align: middle;
+        }
+
+        div.box table tbody tr td:nth-child(4) span {
+            display: inline-block;
+            width: 15px;
+            line-height: 30px;
+            background-color: #666;
+            color: #eee;
+            vertical-align: middle;
+        }
+
+        div.box table tbody tr td:nth-child(4) input {
+            width: 20px;
+            height: 20px;
+            outline: none;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        div.box table tbody tr td:nth-child(6) span {
+            padding: 4px 10px;
+            background-color: #999;
+            color: white;
+        }
+
+        div.box div.bottom {
+            padding: 15px 15px;
+            margin-top: 15px;
+            height: 55px;
+            background-color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        div.box div.bottom span.delAll {
+            cursor: default;
+        }
+
+        div.box div.bottom div.js {
+            padding: 0 6px;
+            background-color: #00A5FF;
+            color: white;
+            margin-right: 10px;
+            cursor: default;
+        }
+        div.box div.bottom a, div.box div.bottom a:visited {
+            color: #0b97ff;
+            text-decoration: none;
+        }
+        td.des{
+            padding: 5px 8px;
+        }
+    </style>
+</head>
+<body>
+<header id="header"></header>
+<main class="container" style="margin-top: 50px;margin-bottom: 50px">
+    <div class="row content" id="content">
+        <div class="box" id="box">
+            <table class="text-center">
+                <thead>
+                <tr>
+                    <th>
+                        <label>
+                            <input type="checkbox" class="checkAll check" checked>全选
+                        </label>
+                    </th>
+                    <th width="60%">商品</th>
+                    <th>单价</th>
+                    <th>数量</th>
+                    <th>小计</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="tbody">
+
+                </tbody>
+            </table>
+            <div class="bottom" id="bottom">
+                <label>
+                    <input type="checkbox" class="checkAll check" checked>全选
+                </label>
+                <span class="delAll">全部删除</span>
+                <div>已选商品：
+                    <span class="selected" id="num">3</span>件
+                </div>
+                <a href="##" class="show">显示或隐藏</a>
+                <div>合计：￥
+                    <span class="total" id="total">7000</span>
+                </div>
+                <div class="js" id="buy_all">结算</div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer id="footer"></footer>
+<script src="js/jquery-2.1.3.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    $('#header').load('header.html');
+    $('#footer').load('footer.html');
+
+    var HOST='http://localhost:3000/';
+
+    function show() {
+        $.ajax({
+            url: HOST+'users/cart',
+            type: 'get',
+            xhrFields:{withCredentials:true},
+            dataType: 'json',
+            success:function(res){
+                if(res.flag===1){
+                    alert('您的购物车没有商品噢，请添加先加购！');
+                    window.location.href='index.html';
+                }else {
+                    $('#tbody').html('');
+                    res.arr.forEach(function (el) {
+                        var price=parseInt(el.price).toFixed(2);
+                        $('#tbody').append(`
+                     <tr data-id="${el.id}">
+                        <td>
+                            <input type="checkbox" class="check" checked>
+                        </td>
+                        <td class="des">
+                            <img src="${HOST+el.src}">
+                              <span>${el.title}</span>
+                        </td>
+                        <td>${price}</td>
+                        <td>
+                            <span class="reduce">-</span><input class="text" value="1"><span class="add">+</span>
+                        </td>
+                        <td>${price}</td>
+                        <td>
+                            <span class="del">删除</span>
+                        </td>
+                    </tr>`);
+                    });
+                    total();
+                }
+            },
+            error:function(){
+                alert('error');
+            }
+        });
+    }
+    show();
+    function get_el(exp){//获取元素
+        var el;
+        if (/^#\w+$/.test(exp)){
+            el=document.querySelector(exp);
+        } else {
+            el=document.querySelectorAll(exp);
+        }
+        return el;
+    }
+
+    var trs=get_el('#tbody tr');
+    var box=get_el('#box');
+
+    box.onclick=function (ev) {
+        //利用事件冒泡的原理，把事件添加给父级box
+        var e=ev||event;
+        var target=e.target||e.srcElement;//获取当前点击对象
+        var cls=target.className;
+        if (cls.indexOf("check")!=-1)cls='check';
+        switch (cls) {
+            case 'add'://添加商品数量
+                var tr=target.parentNode.parentNode;//找到点击过那一行
+                var tds=tr.cells;
+                target.previousSibling.value++;//数量那一栏的数字加一
+                tds[4].innerText=(tds[2].innerText*target.previousElementSibling.value).toFixed(2);
+                //修改小计里面的价格
+                break;
+            case 'reduce'://减少商品数量
+                var tr=target.parentNode.parentNode;//找到点击过那一行
+                var tds=tr.cells;
+                if (target.nextElementSibling.value!=1) target.nextElementSibling.value--;
+                //数量那一栏减一
+                tds[4].innerText=(tds[2].innerText*target.nextElementSibling.value).toFixed(2);
+                //修改小计里面的价格
+                break;
+            case 'text'://直接修改数量那一栏input的值
+                var tr=target.parentNode.parentNode;
+                var tds=tr.cells;
+                target.onblur=function () {//失去焦点时执行
+                    tds[4].innerText=(tds[2].innerText*this.value).toFixed(2);
+                    this.onblur=null;//销毁事件
+                };
+                break;
+            case 'del': //删除商品
+                var tr=target.parentNode.parentNode;
+                if (confirm('你确定要删除吗？')){
+                    tbody.removeChild(tr);
+                    trs=get_el('#tbody tr');
+                    var arr=[];
+                    trs.forEach(function (el) {
+                        arr[arr.length]=$(el).data('id');
+                    });
+                    var cart=JSON.stringify(arr);
+                    $.ajax({
+                        url: HOST+'users/del_one',
+                        type: 'get',
+                        xhrFields:{withCredentials:true},
+                        dataType: 'json',
+                        data:cart,
+                        success:function(res){
+                            if(res){
+                                alert('删除成功！');
+                                show();
+                                show_cart();
+                            }else
+                                alert('删除失败！');
+                        },
+                        error:function(){
+                            alert('error');
+                        }
+                    });
+                }
+
+                break;
+            case 'check'://复选框选择商品
+                chk(target);//执行复选框函数
+                break;
+            case 'delAll'://删除全部商品
+                if (confirm('你确定要删除吗？')){
+                    tbody.innerHTML='';
+                    $.ajax({
+                        url: HOST+'users/del_all',
+                        type: 'get',
+                        xhrFields:{withCredentials:true},
+                        dataType: 'json',
+                        data:cart,
+                        success:function(res){
+                            if(res){
+                                alert('全部删除成功！');
+                                show();
+                                show_cart();
+                            }else
+                                alert('全部删除失败！');
+                        },
+                        error:function(){
+                            alert('error');
+                        }
+                    });
+                }
+
+                break;
+            case 'cancel':
+                var index=target.getAttribute('data-index');
+                trs[index].cells[0].children[0].checked=false;
+        }
+        total();//计算价格
+    };
+    var total_all=get_el('#total');
+    var num=get_el('#num');
+
+    function total() {//计算价格
+        var sum=0,number=0;
+        trs=get_el('tbody tr');
+        trs.forEach(function (tr,i) {
+            //遍历每一行判断，将已选择商品添加到显示隐藏里面
+            var tds=tr.cells;
+            if (tds[0].children[0].checked){
+                sum+=parseFloat(tds[4].innerText);
+                number+=parseInt(tds[3].children[1].value);
+            }
+            total_all.innerText=sum.toFixed(2);
+            num.innerText=number;
+        })
+    }
+    var checkAll=get_el('#box .checkAll');
+    function chk(target) {//复选框判断
+        var cls=target.className;
+        var flag = true;
+        if (cls==='check'){//点击非全选复选框
+            /*当存在一个复选框未选中，全选框为false*/
+            for (var i = 0; i < trs.length; i++) {
+                var checkbox = trs[i].cells[0].children[0];
+                if (!checkbox.checked) {
+                    flag = false;
+                    break
+                }
+            }
+            checkAll[0].checked = checkAll[1].checked = flag;
+        }else {//点击全选复选框，所有复选框的状态保持一致
+            for (var i = 0; i < trs.length; i++) {
+                var checkbox = trs[i].cells[0].children[0];
+                checkbox.checked = target.checked;
+            }
+            checkAll[0].checked = checkAll[1].checked = target.checked;
+        }
+    }
+
+    $('#buy_all').click(function () {
+        trs=get_el('#tbody tr');
+        var arr1=[];
+        var arr2=[];
+        trs.forEach(function (el) {
+            var checkbox=el.cells[0].children[0];
+            var json={};
+            json['id']=$(el).data('id');
+            json['title']=el.cells[1].children[1].innerText;
+            json['num']=el.cells[3].children[1].value;
+            if (checkbox.checked)
+                arr1[arr1.length]=json;
+            else
+                arr2[arr2.length]=$(el).data('id');
+        });
+        var total=get_el('#total').innerText;
+        var order=JSON.stringify(arr1);
+        var cart=JSON.stringify(arr2);
+        $.ajax({
+            url: HOST+'users/buy_all',
+            type: 'get',
+            xhrFields:{withCredentials:true},
+            dataType: 'json',
+            data:{order,total,cart},
+            success:function(res){
+
+                alert(res);
+                show();
+            },
+            error:function(){
+                alert('error');
+            }
+        });
+    });
+</script>
+</body>
+</html>

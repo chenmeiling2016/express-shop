@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>shop首页</title>
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/public.css">
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            text-decoration: none!important;
+        }
+        .container{
+            width: 1200px;
+        }
+        #form_s{
+            line-height: 50px;
+        }
+        #form_s input{
+            height: 38px;
+            width: 380px!important;
+            border-radius: 8px!important;
+        }
+        #form_s button{
+            height: 36px;
+            margin-left: 3px;
+        }
+        main div.content{
+            margin-bottom: 50px;
+        }
+        div.thumbnail{
+            padding: 0;
+            border: 1px solid white;
+        }
+        main div.content div.thumbnail:hover{
+            border: 1px solid #dd5d26;
+            box-sizing: border-box;
+        }
+        div.thumbnail img{
+            border-radius: 4px 4px 0 0;
+        }
+        main div.content h3{
+            color: red;
+            margin-top: 10px;
+        }
+        main div.content p{
+            margin-top: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+    </style>
+</head>
+
+<body>
+<header id="header"></header>
+<main class="container" style="margin-top: 50px">
+    <div class="row">
+        <form id="form_s" class="navbar-form text-center" role="search">
+            <div class="form-group">
+                <input type="text" class="form-control" name="key" id="key" placeholder="请输入搜索内容" style="width: 300px">
+                <button type="submit" class="btn btn-primary" id="search">Submit</button>
+            </div>
+        </form>
+    </div>
+    <div class="row content" id="content">
+
+    </div>
+    <div class="page text-center">
+        <ul class="pagination" id="page">
+            <li data-i="0" id="index" class="disabled"><a href="##">&laquo;首页</a></li>
+            <li data-i="1" class="disabled"><a href="##">&lt;上一页</a></li>
+            <li data-i="2"><a href="##">下一页&gt;</a></li>
+            <li data-i="3" id="end"><a href="##">尾页&raquo;</a></li>
+            <li class="disabled">
+                <a href="##" id="total"></a>
+            </li>
+        </ul>
+    </div>
+</main>
+<footer id="footer"></footer>
+</body>
+<script src="js/jquery-2.1.3.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script>
+    $('#header').load('header.html');
+    $('#footer').load('footer.html');
+    var HOST='http://localhost:3000/';
+    var pages=0,cPage=0,key='';
+    function show() {
+        $.getJSON(HOST+'users/list',{cPage:cPage,key:key},function (arr) {
+            var str='';
+            arr.data.forEach(function (el) {
+                var price=(parseFloat(el.price)).toFixed(2);
+                str+=`<div class="col-md-3 col-sm-6">
+                    <a href="detail.html?id=${el.id}">
+                        <div class="thumbnail">
+                            <img src="${HOST+el.src}" alt="...">
+                            <div class="caption">
+                                <h3>￥${price}</h3>
+                                <p>${el.title}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>`;
+            });
+            $('#content').html(str);
+            pages=arr.pages;
+            $('#total').html(((cPage)+1)+'/'+pages);
+            disabled(cPage);
+        });
+    }
+    show();
+    $('#page').on('click','li',function () {//上下翻页，翻遍当前页的值
+        var i=$(this).data('i');//jquery里特有的获取data-*属性的方法
+        switch (i){
+            case 0:cPage=0;break;
+            case 1:cPage>0?cPage--:0;break;
+            case 2:cPage<(pages-1)?cPage++:pages-1;break;
+            case 3:cPage=pages-1;break;
+        }
+        show();
+        disabled();
+    });
+    function disabled() {//关于临界值禁止选择
+        if (cPage==0){/*当前页为第一页，首页和上一页选项禁止点击*/
+            $('#index').addClass('disabled').next().addClass('disabled');
+            $('#end').removeClass('disabled').prev().removeClass('disabled');
+        } else if (cPage==pages-1){
+            $('#index').removeClass('disabled').next().removeClass('disabled');
+            $('#end').addClass('disabled').prev().addClass('disabled');
+        } else {/*当前页为最后一页，尾页和下一页选项禁止点击*/
+            $('#index').removeClass('disabled').next().removeClass('disabled');
+            $('#end').removeClass('disabled').prev().removeClass('disabled');
+        }
+    }
+    $('#search').click(function (e) {
+        e.preventDefault();
+        key=$('#key').val();
+        cPage=0;
+        show()
+    })
+</script>
+</html>

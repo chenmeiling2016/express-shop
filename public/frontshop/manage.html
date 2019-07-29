@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="css/public.css" rel="stylesheet">
+    <script src="js/jquery-2.1.3.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        body{
+            padding: 70px 0 30px 0;
+            box-sizing: border-box;
+        }
+        main{
+            overflow: hidden;
+        }
+        main,main div.row,main div.row div.my_body,
+        main div.row div.my_body{
+            height: 100%;
+        }
+        div.panel{
+            height: calc(100% - 20px);
+        }
+
+        aside.my_nav{
+            position: fixed;
+            top: 70px;
+            left: 10px;
+            width: calc(100% / 6 - 40px);
+        }
+        div.my_body div.panel div.panel-body{
+            height: calc(100% - 38px);
+            overflow-y: auto;
+        }
+        .nav-pills>li>a{
+            border-radius: 5px 5px 0 0 ;
+        }
+        td>img{
+            width: 120px;
+            height: 120px;
+        }
+    </style>
+</head>
+<body>
+<header id="header" class="navbar-fixed-top">
+
+</header>
+<aside class="panel panel-primary my_nav">
+    <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="#">管理控制台</a></li>
+        <li><a href="#one">添加商品</a></li>
+        <li><a href="#two">删除商品</a></li>
+        <li><a href="#three">编辑商品</a></li>
+        <li><a href="#four">更换图片</a></li>
+        <li><a href="#five">修改密码</a></li>
+        <li><a href="#six">打印发货单</a></li>
+    </ul>
+</aside>
+<main class="container-fluid">
+    <div class="row">
+        <div class="col-md-10 col-md-offset-2 my_body">
+            <div class="panel panel-primary" id="one">
+                <div class="panel-heading">
+                    <h3 class="panel-title">添加商品</h3>
+                </div>
+                <div class="panel-body">
+                    <form id="add_from" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+                        <div class="form-group has-feedback">
+                            <label class="col-sm-3 control-label" for="title">标题：</label>
+                            <div class="col-sm-9 require">
+                                <input type="text" class="form-control" name="title" id="title"
+                                       pattern="" required>
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label class="col-sm-3 control-label" for="price">价格：</label>
+                            <div class="col-sm-9 require">
+                                <input type="text" class="form-control" name="price" id="price"
+                                       pattern="\S{1,60}"  required>
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label class="col-sm-3 control-label" for="image">图片：</label>
+                            <div class="col-sm-9 require">
+                                <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
+                                <input type="file" class="form-control" name="image" id="image">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3 col-sm-offset-3">
+                                <button class="btn btn-default submit">添加</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button type="reset" class="btn btn-default reset">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                    <table class="table table-bordered text-center" id="table1">
+                        <thead>
+                        <td style="width: 20%">标题</td>
+                        <td style="width: 10%">价格</td>
+                        <td style="width: 20%">图片</td>
+                        </thead>
+                        <tbody id="tbody1">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel panel-primary" id="two">
+                <div class="panel-heading">
+                    <h3 class="panel-title">删除商品</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered text-center" id="table2">
+                        <thead>
+                        <td style="width: 80%">标题</td>
+                        <td style="width: 20%">操作</td>
+                        </thead>
+                        <tbody id="tbody2">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="panel panel-primary" id="three">
+                <div class="panel-heading">
+                    <h3 class="panel-title">编辑商品</h3>
+                </div>
+                <div class="panel-body">
+                    <form id="edit_form" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+                        <div class="form-group has-feedback">
+                            <label class="col-sm-3 control-label" for="title">请输入修改的标题：</label>
+                            <div class="col-sm-6 require">
+                                <input id="edit" type="text" class="form-control" name="title"
+                                       pattern="\S{1,60}" required>
+                            </div>
+                            <button id="edit_search" type="button" class="btn btn-primary glyphicon glyphicon-search"></button>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label class="col-sm-3 control-label" for="edit_title">标题：</label>
+                            <div class="col-sm-9 require">
+                                <input id="edit_title" type="text" class="form-control" name="edit_title"
+                                       pattern="" required>
+                                <input id="edit_id" type="hidden" name="edit_id">
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label class="col-sm-3 control-label" for="edit_price">价格：</label>
+                            <div class="col-sm-9 require">
+                                <input id="edit_price" type="text" class="form-control" name="edit_price"
+                                       pattern="\S{1,60}" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3 col-sm-offset-3">
+                                <button class="btn btn-default submit">确认</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button type="reset" class="btn btn-default reset">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-primary" id="four">
+                <div class="panel-heading">
+                    <h3 class="panel-title">更换图片</h3>
+                </div>
+                <div class="panel-body">
+                    <form id="img_form" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+                        <div class="form-group has-feedback">
+                            <label class="col-sm-3 control-label" for="title">请输入修改的标题：</label>
+                            <div class="col-sm-6 require">
+                                <input id="edit_img" type="text" class="form-control" name="title"
+                                       pattern="\S{1,60}" required>
+                            </div>
+                            <button id="img_search" type="button" class="btn btn-primary glyphicon glyphicon-search"></button>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label class="col-sm-3 control-label" for="img_title">标题：</label>
+                            <div class="col-sm-9 require">
+                                <input id="img_title" type="text" class="form-control" name="img_title"
+                                       pattern="" required>
+                                <input id="img_id" class="hidden" name="img_id">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="old_img" class="col-sm-2 control-label">原图片:</label>
+                            <div class="col-sm-7">
+                                <img src="" id="old_img" width="200">
+                                <input id="old_name" type="hidden" name="old_name">
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label class="col-sm-3 control-label" for="image">图片：</label>
+                            <div class="col-sm-9 require">
+                                <input type="hidden" name="MAX_FILE_SIZE" value="5000000">
+                                <input type="file" class="form-control" name="new_image" id="new_image">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-3 col-sm-offset-3">
+                                <button class="btn btn-default submit">确认</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button type="reset" class="btn btn-default reset">重置</button>
+                            </div>
+                        </div>
+                        <table class="table table-bordered text-center" id="change">
+                            <thead>
+                            <td style="width: 10%">标题</td>
+                            <td style="width: 20%">图片</td>
+                            </thead>
+                            <tbody id="img_change">
+                            </tbody>
+                        </table>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-primary" id="five">
+                <div class="panel-heading">
+                    <h3 class="panel-title">修改密码</h3>
+                </div>
+                <div class="panel-body">
+                    <form id="pwd_form" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+                        <div class="form-group has-feedback">
+                            <label for="old_pwd" class="col-sm-2 control-label">原密码</label>
+                            <div class="col-sm-7">
+                                <input type="password" name="old_pwd" class="form-control" id="old_pwd" placeholder="请输入原密码">
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="new_pwd" class="col-sm-2 control-label">新密码</label>
+                            <div class="col-sm-7">
+                                <input type="password" name="new_pwd" class="form-control" id="new_pwd" placeholder="请输入原密码">
+                            </div>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <label for="re_pwd" class="col-sm-2 control-label">新密码</label>
+                            <div class="col-sm-7">
+                                <input type="password" name="re_pwd" class="form-control" id="re_pwd" placeholder="两次密码请保持一致">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-3 col-sm-offset-3">
+                                <button class="btn btn-default submit">确认</button>
+                            </div>
+                            <div class="col-sm-6">
+                                <button type="reset" class="btn btn-default reset">重置</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-primary" id="six">
+                <div class="panel-heading">
+                    <h3 class="panel-title">打印发货单</h3>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-bordered text-center" id="table3">
+                        <thead>
+                        <td style="width: 20%">姓名</td>
+                        <td style="width: 10%">电话</td>
+                        <td style="width: 10%">操作</td>
+                        </thead>
+                        <tbody id="tbody3">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    $('#header').load('header.html');
+    var HOST='http://localhost:3000/';
+
+    $('#add_from').submit(function (e) {
+        e.preventDefault();
+        // var data=new FormData(this);//获取非文本类的数据
+        var data=new FormData(this);//获取非文本类的数据
+        $.ajax({
+            url:HOST+"admin/add",
+            data:data,
+            type:"post",
+            dataType:"json",
+            cache:false,
+            contentType:false,
+            processData:false,
+            success:function(res){
+                if (res.flag===1){
+                    alert('上传成功！');
+                    $('#tbody1').append( `<tr><td>${res.detail[0]}</td><td>${res.detail[1]}</td>
+                       <td><img src="${HOST+res.detail[2]}"></img></td></tr>`);
+                } else if(res.flag===2){
+                    alert('网络或其他未知错误，请重试！')
+                }else{
+                    alert('图片格式错误，请重试！')
+                }
+
+            },
+            error: function () {
+                alert("error")
+            }
+        });
+    });
+    $.getJSON(HOST+'admin/send',function (arr) {
+        arr.forEach(function (el) {
+            $('#tbody3').append( `<tr>
+                            <td>${el.nc}</td>
+                            <td>${el.phone}</td>
+                            <td><button data-id="${el.id}" type="button" class="btn btn-default">打印</button></td>
+                        </tr>`);
+        })
+    });
+    $.getJSON(HOST+'admin/goods',function (arr) {
+        arr.forEach(function (el) {
+            $('#tbody2').append( `<tr>
+                            <td>${el.title}</td>
+                            <td><button data-id="${el.id}" type="button" class="btn btn-default">删除</button></td>
+                        </tr>`);
+        })
+    });
+    $('#tbody2').on('click','button',function () {
+        var id=$(this).data('id');
+        $.getJSON(HOST+'admin/delete?id='+id,function (res) {
+          if(res===1)
+              alert('删除商品成功！');
+          else
+              alert('删除失败！')
+        });
+    });
+    $('#tbody3').on('click','button',function () {
+        var id=$(this).data('id');
+        window.location.href='print.html?id='+id;
+    });
+    $('#edit_search').click(function () {
+        var key=$('#edit').val();
+        $.getJSON(HOST+'admin/edit_search?key='+key,function (res) {
+            $('#edit_title').val(res.title);
+            $('#edit_price').val(res.price);
+            $('#edit_id').val(res.id);
+        })
+    });
+    $('#edit_form').submit(function (e) {
+        e.preventDefault();
+        var data=$(this).serialize();
+        $.getJSON(HOST+'admin/edit',data,function (res) {
+            if(res===1)
+                alert('修改成功');
+            else
+                alert('修改失败')
+        })
+    });
+    $('#img_search').click(function () {
+        var key=$('#edit_img').val();
+        $.getJSON(HOST+'admin/img_search?key='+key,function (res) {
+            $('#img_title').val(res.title);
+            $('#old_img').attr('src',`${HOST+res.src}`);
+            $('#img_id').val(res.id);
+            $('#old_name').val(res.src);
+        })
+    });
+    $('#img_form').submit(function (e) {
+        e.preventDefault();
+        // var data=new FormData(this);//获取非文本类的数据
+        var data=new FormData(this);//获取非文本类的数据
+        $.ajax({
+            url:HOST+"admin/edit_img",
+            data:data,
+            type:"post",
+            dataType:"json",
+            cache:false,
+            contentType:false,
+            processData:false,
+            success:function(res){
+                console.log(res);
+                if (res.flag===1){
+                    alert('图片修改成功！');
+                    $('#img_change').append( `<tr><td>${res.detail[0]}</td>
+                       <td><img src="${HOST+res.detail[1]}"></img></td></tr>`);
+                } else if(res.flag===2){
+                    alert('网络或其他未知错误，请重试！')
+                }else{
+                    alert('图片格式错误，请重试！')
+                }
+
+            },
+            error: function () {
+                alert("error")
+            }
+        });
+    });
+    $('#pwd_form').submit(function (e) {
+        e.preventDefault();
+        var data=$(this).serialize();
+        $.ajax({
+            url: HOST+'admin/edit_pwd',
+            type: 'get',
+            xhrFields:{withCredentials:true},
+            dataType: 'json',
+            data:data,
+            success:function(res){
+               alert(res)
+            },
+            error:function(){
+                alert('error');
+            }
+        });
+    })
+</script>
+</body>
+</html>

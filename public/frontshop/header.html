@@ -1,0 +1,306 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                <!-- sr-only 用于提升可访问性（accessibility），它的含义是 screen reader only（仅提供给屏幕阅读器使用） -->
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">首页</a>
+        </div>
+
+        <!-- 这个元素在移动设备中将被折叠起来 -->
+        <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active hidden-sm"><a href="#">公司简介</a></li>
+                <li class="hidden-sm hidden-md"><a href="#">新品出炉</a></li>
+                <li class="hidden-sm hidden-md"><a href="#">产品介绍</a></li>
+            </ul>
+            <ul id="login_reg_car" class="nav navbar-nav navbar-right">
+                <li><a data-toggle="modal" href="#" id="cart">加入购物车<span class="badge" id="cart_num">0</span></a></li>
+                <li class="toggle"><a data-toggle="modal" href="#loginer" id="login">登录</a></li>
+                <li class="toggle"><a data-toggle="modal" href="#register">注册</a></li>
+                <li class="toggle hidden"><a id="nicheng" href="##"></a></li>
+                <li class="toggle hidden"><a id="logout" href="##">注销</a></li>
+                <li class="toggle hidden"><a href="edit_info.html">修改个人信息</a></li>
+                <li class="toggle hidden"><a href="manage.html">管理控制台</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div id="loginer" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel1"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">请登录</h4>
+            </div>
+            <form id="form_login" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-3 control-label" for="zh1">用户名：</label>
+                        <div class="col-sm-9 require">
+                            <input type="text" class="form-control" name="username" id="zh1"
+                                   pattern="\w{6,10}" required>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-3 control-label" for="pw1">密码：</label>
+                        <div class="col-sm-9 require">
+                            <input type="password" pattern="\w{6,10}" class="form-control" name="pwd" id="pw1"
+                                   required>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-3 control-label" for="yzm">验证码：</label>
+                        <div class="col-sm-5 require">
+                            <input type="text" pattern="\w{4}" class="form-control" name="yzm" id="yzm"
+                                   required>
+                        </div>
+                        <div class="col-sm-4" >
+                            <a href="##" id="yzm_img"></a>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label id="info" class="col-sm-4 control-label pull-left"></label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">登录</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="register" class="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabe2"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">请注册</h4>
+            </div>
+            <form id="form_regist" class="form-horizontal">
+                <div class="modal-body">
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-3 control-label" for="zh2">用户名：</label>
+                        <div class="col-sm-9 require">
+                            <input type="text" class="form-control" name="username" id="zh2"
+                                   pattern="\w{6,10}" required>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-3 control-label" for="pwd">密码：</label>
+                        <div class="col-sm-9 require">
+                            <input type="password" pattern="\w{6,10}" class="form-control" name="pwd" id="pwd">
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-3 control-label" for="repwd">确认密码：</label>
+                        <div class="col-sm-9 require">
+                            <input type="password" pattern="\w{6,10}" class="form-control" name="repwd" id="repwd">
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-3 control-label" for="lc">昵称：</label>
+                        <div class="col-sm-9 require">
+                            <input type="text" pattern="\S{2,10}" class="form-control" name="nc" id="lc">
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-3 control-label" for="phone">电话：</label>
+                        <div class="col-sm-9 require">
+                            <input type="text" pattern="\S{11}" class="form-control" name="phone" id="phone">
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label class="col-sm-3 control-label" for="address">收货地址：</label>
+                        <div class="col-sm-9 require">
+                            <input type="text"  class="form-control" name="address" id="address">
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback">
+                        <label id="wanner" class="col-sm-4 control-label pull-left"></label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">注册</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    var HOST='http://localhost:3000/';
+    function toggle(){
+        $.ajax({
+            url: HOST+'users/userinfo',
+            type: 'get',
+            xhrFields:{withCredentials:true},
+            dataType: 'json',
+            success:function(data){
+                if(data){//用户已经登录，显示昵称和注销选项
+                    $('li.toggle').toggleClass('hidden');
+                    $('#nicheng').html('欢迎你：'+data['nc']);
+                    show_cart();
+                }
+            },
+            error:function(){
+                alert('error');
+            }
+        });
+    }
+    toggle();
+    $('#login').click(function () {
+        $.ajax({
+            url: HOST+'users/yzm',
+            type: 'get',
+            xhrFields:{withCredentials:true},
+            dataType: 'json',
+            success:function(data){
+                $('#yzm_img').html(data)
+            },
+            error:function(){
+                alert('error');
+            }
+        });
+    });
+    $('#form_login').submit(function (e) {/!*登录*!/
+        e.preventDefault();/!*阻止表单默认事件，页面全局刷新*!/
+        var data=$('#form_login').serialize();/!*将表单里的数据包装起来*!/
+        $.ajax({
+            url : HOST+'users/login',
+            type : "post",
+            data : data,
+            xhrFields:{withCredentials:true},
+            dataType:'json',
+            success:function(res) {
+                var flag=res.flag;
+                switch (flag) {
+                    case 1:
+                        alert("验证码错误");
+                        break;
+                    case 2:
+                        alert("账号或密码错误");
+                        break;
+                    case 3:
+                        alert("数据查询出错");
+                        break;
+                    case 4:
+                        $('#loginer').modal('hide');
+                        /*关闭模态框*/
+                        toggle();
+                        show_cart();
+                        break;
+                    default:
+                        alert('未知错误');
+                        break;
+                }
+            },
+            error:function(err){
+                alert("这是失败的信息"+err);
+            }
+        });
+    });
+    $('#form_regist').submit(function (e) {
+        e.preventDefault();
+        if($('#pwd').val()!==$('#repwd').val()){
+            alert('两次密码不一致！');
+            return;
+        }
+        var data=$('#form_regist').serialize();
+        $.ajax({
+            url : HOST+'users/register',
+            type : "post",
+            data : data,
+            xhrFields:{withCredentials:true},
+            dataType:'json',
+            success:function(res) {
+                var flag=res.flag;
+                switch (flag) {
+                    case 1:
+                        alert("账号已被占用！");
+                        break;
+                    case 2:
+                        $('#register').modal('hide');
+                        /*关闭模态框*/
+                        toggle();
+                        show_cart();
+                        break;
+                    case 3:
+                        alert("数据库查询出错");
+                        break;
+                    default:
+                        alert('未知错误');
+                        break;
+                }
+            },
+            error:function(err){
+                alert("这是失败的信息"+err);
+            }
+        });
+    });
+    $('#logout').click(function () {
+        confirm('确定要注销？');
+        $.ajax({
+            url: HOST+'users/logout',
+            type: 'get',
+            xhrFields:{withCredentials:true},
+            dataType: 'json',
+            success:function(res){
+                if(res)$('li.toggle').toggleClass('hidden');
+                window.location.href='index.html';
+            },
+            error:function(){
+                alert('error');
+            }
+        });
+    });
+    $('#cart').click(function () {
+        var nc=$('#nicheng').parent();
+
+        if (nc.hasClass('hidden')){/*未登录*/
+            alert('请先登录!');
+        }else {
+            location.href='cart.html';
+        }
+    });
+
+    function show_cart() {
+        $.ajax({
+            url: HOST+'users/get_num',
+            type: 'get',
+            xhrFields:{withCredentials:true},
+            dataType: 'json',
+            success:function(data){
+                $('#cart_num').text(data)
+            },
+            error:function(){
+                alert('error');
+            }
+        });
+    }
+    /*
+
+     $('#form_regist').submit(function (e) {
+         e.preventDefault();
+         var data=$('#form_regist').serialize();
+         $.getJSON('php/regist.php',data,function (res) {
+             if(res==3){
+                 toggle();
+                 $('#register').modal('hide');
+             }else if (res==2) {
+                 $('#wanner').html('两次密码不一致，请重试！')
+             }else if (res==1) {
+                 $('#wanner').html('用户名冲突，请重试！')
+             }
+         })
+     });*/
+</script>
